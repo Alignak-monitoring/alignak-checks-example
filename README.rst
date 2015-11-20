@@ -27,12 +27,11 @@ The proposed structure to build a pack:
 * all the checks packs are named as `alignak_checks_EXAMPLE`
 * the `EXAMPLE` repository is named as `alignak-checks-EXAMPLE`
 * the `EXAMPLE` repository includes the following files:
-
- * README.rst
- * LICENCE (optional)
- * AUTHORS (optional)
- * MANIFEST.in
- * setup.py
+  * README.rst
+  * LICENCE (optional)
+  * AUTHORS (optional)
+  * MANIFEST.in
+  * setup.py
 
 * the `EXAMPLE` repository includes an `alignak_checks_EXAMPLE` directory containing the pack configuration files
 * the files in `alignak_checks_EXAMPLE` directory will be copied to the Alignak configuration
@@ -80,7 +79,7 @@ Then, to build and make your package available to the community, you must use th
 
 When your package is ready and functional:
 
-* run `setup.py sdist upload` to upload the package to `PyPI repository <https://pypi.python.org/pypi>`_
+* run `setup.py sdist upload` to upload the package to PyPI repository <https://pypi.python.org/pypi>_
 
 **Note**: every time you upload a package to PyPI you will need to change the package version in the `alignak_checks_EXAMPLE2/__init.py__` file.
 
@@ -129,5 +128,6 @@ Contributions to this project are welcome and encouraged ... issues in the proje
 License
 ----------------------------------------
 
-Alignak Pack EXAMPLE is available under the `GPL version 3 license<http://opensource.org/licenses/GPL-3.0>`_.
+Alignak Pack EXAMPLE is available under the `GPL version 3 license`_.
 
+.. _GPL version 3 license: http://opensource.org/licenses/GPL-3.0
