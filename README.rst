@@ -7,6 +7,12 @@ This project is an example and a how-to build a checks pack for Alignak monitori
 Packaging
 ----------------------------------------
 
+Repositories
+~~~~~~~~~~~~~~~~~~~~~~~
+
+All Alignak packs are stored in their own repository in the `Alignak monitoring contrib`_ Github organization.
+
+
 Design and principles
 ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -131,3 +137,4 @@ License
 Alignak Pack EXAMPLE is available under the `GPL version 3 license`_.
 
 .. _GPL version 3 license: http://opensource.org/licenses/GPL-3.0
+.. _Alignak monitoring contrib: https://github.com/Alignak-monitoring-contrib
