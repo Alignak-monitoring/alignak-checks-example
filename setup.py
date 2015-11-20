@@ -44,9 +44,9 @@ else:
     exit(2)
 
 # Import pack information
-from alignak_checks_glances import __version__, __author__, __author_email__, __copyright__
-from alignak_checks_glances import __license__, __url__, __checks_type__
-from alignak_checks_glances import __name__ as __pkg_name__
+from alignak_checks_EXAMPLE import __version__, __author__, __author_email__, __copyright__
+from alignak_checks_EXAMPLE import __license__, __url__, __checks_type__
+from alignak_checks_EXAMPLE import __name__ as __pkg_name__
 package = import_module(__pkg_name__)
 
 # Define installation paths
@@ -62,13 +62,14 @@ for subdir, dirs, files in os.walk(__pkg_name__):
     if subdir and 'plugins' in subdir:
         for subdir, dirs, files in os.walk(os.path.join(__pkg_name__, 'plugins')):
             for file in files:
-                print 'plugin: ' + file
                 if not file.startswith('__'):
                     plugins_files.append(os.path.join(subdir, file))
     for file in files:
+        if subdir and 'plugins' in subdir:
+            continue
         if not file.startswith('__'):
-            pack_files.append(os.path.join(subdir, file))
-
+            if file not in plugins_files:
+                pack_files.append(os.path.join(subdir, file))
 
 setup(
     name=__pkg_name__,

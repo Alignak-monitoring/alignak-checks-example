@@ -71,6 +71,7 @@ To build a new package EXAMPLE2:
 
 * update the ``setup.py`` file
 
+  * search and replace ``EXAMPLE`` with ``EXAMPLE2``
   * ``setup.py`` should not be modified for most of the packs ... if necessary, do it with much care!
 
 And that's it!
