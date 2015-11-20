@@ -24,18 +24,18 @@ The pack files are to be made available in the monitoring objects configuration 
 
 The proposed structure to build a pack:
 
-* all the checks packs are named as `alignak_checks_EXAMPLE`
-* the `EXAMPLE` repository is named as `alignak-checks-EXAMPLE`
-* the `EXAMPLE` repository includes the following files:
+* all the checks packs are named as ``alignak_checks_EXAMPLE``
+* the ``EXAMPLE`` repository is named as ``alignak-checks-EXAMPLE``
+* the ``EXAMPLE`` repository includes the following files:
   * README.rst
   * LICENCE (optional)
   * AUTHORS (optional)
   * MANIFEST.in
   * setup.py
 
-* the `EXAMPLE` repository includes an `alignak_checks_EXAMPLE` directory containing the pack configuration files
-* the files in `alignak_checks_EXAMPLE` directory will be copied to the Alignak configuration
-* the files in `alignak_checks_EXAMPLE/plugins` directory will be copied to the Alignak libexec directory
+* the ``EXAMPLE`` repository includes an ``alignak_checks_EXAMPLE`` directory containing the pack configuration files
+* the files in ``alignak_checks_EXAMPLE`` directory will be copied to the Alignak configuration
+* the files in ``alignak_checks_EXAMPLE/plugins`` directory will be copied to the Alignak libexec directory
 
 
 
@@ -44,44 +44,44 @@ Building
 
 To build a new package EXAMPLE2:
 
-* create a new `alignak-checks-EXAMPLE2` repository which is a copy of this repository
+* create a new ``alignak-checks-EXAMPLE2`` repository which is a copy of this repository
 
-  * rename the `alignak_checks_EXAMPLE` directory to `alignak_checks_EXAMPLE2`
+  * rename the ``alignak_checks_EXAMPLE`` directory to ``alignak_checks_EXAMPLE2``
 
-* update the `MANIFEST.in` file
+* update the ``MANIFEST.in`` file
 
-  * search and replace `EXAMPLE` with `EXAMPLE2` in the `MANIFEST.in` file
+  * search and replace ``EXAMPLE`` with ``EXAMPLE2`` in the ``MANIFEST.in`` file
 
-* update the `README.rst` file
+* update the ``README.rst`` file
 
   * remove this section **Packaging**
-  * search and replace `EXAMPLE` with `EXAMPLE2`
+  * search and replace ``EXAMPLE`` with ``EXAMPLE2``
   * complete the **Documentation** chapter
 
-* update the `alignak_checks_EXAMPLE2/__init.py__` file with all the package information
+* update the ``alignak_checks_EXAMPLE2/__init.py__`` file with all the package information
 
-  * `__checks_type__` will be used to complete the keywords in PyPI and as the sub-directory to store the pack's files
+  * ``__checks_type__`` will be used to complete the keywords in PyPI and as the sub-directory to store the pack's files
   * the file docstring will be used as the package description in PyPI
 
-* update the `setup.py` file
+* update the ``setup.py`` file
 
-  * `setup.py` should not be modified for most of the packs ... if necessary, do it with much care!
+  * ``setup.py`` should not be modified for most of the packs ... if necessary, do it with much care!
 
 And that's it!
 
 Then, to build and make your package available to the community, you must use the standard Python setuptools:
 
-* run `setup.py register` to register the new package near PyPI
-* run `setup.py sdist` to build the package
-* run `setup.py develop` to make the package installed locally (development mode)
-* run `setup.py develop --uninstall` to remove the development mode
-* run `setup.py install --dry-run` to test the package installation (checks which and where the files are installed)
+* run ``setup.py register`` to register the new package near PyPI
+* run ``setup.py sdist`` to build the package
+* run ``setup.py develop`` to make the package installed locally (development mode)
+* run ``setup.py develop --uninstall`` to remove the development mode
+* run ``setup.py install --dry-run`` to test the package installation (checks which and where the files are installed)
 
 When your package is ready and functional:
 
-* run `setup.py sdist upload` to upload the package to PyPI repository <https://pypi.python.org/pypi>_
+* run ``setup.py sdist upload`` to upload the package to PyPI repository <https://pypi.python.org/pypi>_
 
-**Note**: every time you upload a package to PyPI you will need to change the package version in the `alignak_checks_EXAMPLE2/__init.py__` file.
+**Note**: every time you upload a package to PyPI you will need to change the package version in the ``alignak_checks_EXAMPLE2/__init.py__`` file.
 
 Installation
 ----------------------------------------
