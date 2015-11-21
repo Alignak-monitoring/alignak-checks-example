@@ -41,8 +41,51 @@ The proposed structure to build a pack:
 
 * the ``EXAMPLE`` repository includes an ``alignak_checks_EXAMPLE`` directory containing the pack configuration files
 * the files in ``alignak_checks_EXAMPLE`` directory will be copied to the Alignak configuration
-* the files in ``alignak_checks_EXAMPLE/plugins`` directory will be copied to the Alignak libexec directory
+* the files in ``alignak_checks_EXAMPLE/plugins`` directory will be copied to the Alignak plugins directory
+* the files in ``alignak_checks_EXAMPLE/etc`` directory will be copied to the Alignak etc directory
 
+You are allowed to declare variables in the packs files. Thos variables will be valued after pack installation.
+ All the files which name end with ``.parse`` will be parsed after installation to update their content to the Alignak installation paths.
+The searched patterns are:
+
+* $ETC: will be replaced with the Alignak configuration files path (*/etc/alignak*)
+* $VAR: will be replaced with the Alignak lib files path (*/var/lib/alignak*)
+* $RUN: will be replaced with the Alignak run files path (*/var/run/alignak*)
+* $BIN: will be replaced with the Alignak log files path (*/usr/bin*)
+* $LOG: will be replaced with the Alignak log files path (*/var/log/alignak*)
+* $ALIGNAKUSER: will be replaced with the Alignak user account name (*alignak*)
+* $ALIGNAKGROUP: will be replaced with the Alignak group name (*alignak*)
+
+**Note**: the replacement is based on Python Template strings. As of it, $ETC is the simplest form and may be replaced with ${ETC} if necessary.
+
+
+
+
+Repository example
+~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+   README.rst
+   LICENCE
+   AUTHORS
+   MANIFEST.in
+   setup.py
+   alignak_checks_EXAMPLE/
+      etc/
+         test.cfg
+      plugins/
+         sub/
+            plugin.conf
+         plugin.py
+      templates.cfg
+      services.cfg
+      commands.cfg
+
+The content of the directory ``alignak_checks_EXAMPLE`` (including sub directories and except *etc* and *plugins*) will be copied to */var/lib/alignak/libexec*.
+
+The content of the directory ``alignak_checks_EXAMPLE/plugins`` (including sub directories) will be copied to */var/lib/alignak/libexec*.
+
+The content of the directory ``alignak_checks_EXAMPLE/etc`` (including sub directories) will be copied to */etc/alignak*.
 
 
 Building
