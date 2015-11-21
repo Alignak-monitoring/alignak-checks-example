@@ -6,9 +6,17 @@ import sys
 import re
 del os.link
 from importlib import import_module
+import fileinput
+import getpass
+from string import Template
 
 try:
+    import distutils.core
+    from distutils.command.install_data import install_data as _install_data
+
     from setuptools import setup, find_packages
+    from setuptools.command.install import install as _install
+    from setuptools.command.develop import develop as _develop
 except:
     sys.exit("Error: missing python-setuptools library")
 
@@ -21,27 +29,6 @@ if python_version < (2, 7):
 elif python_version >= (3,):
     sys.exit("This application is not yet compatible with Python 3.x, sorry!")
 
-# Define installation paths
-# Get Alignak root installation directory
-if os.path.exists("/usr/local/etc/alignak"):
-    alignak_etc_path = "/usr/local/etc/alignak"
-elif os.path.exists("/etc/alignak"):
-    alignak_etc_path = "/etc/alignak"
-else:
-    print "Alignak etc not found: does not seem to be installed on this host!"
-    exit(1)
-
-# Define plugins paths
-# Get Alignak libexec directory
-if os.path.exists("/usr/local/etc/alignak"):
-    alignak_libexec_path = "/usr/local/libexec/alignak"
-elif os.path.exists("/etc/alignak"):
-    alignak_libexec_path = "/usr/local/var/lib/alignak"
-elif os.path.exists("/etc/alignak"):
-    alignak_libexec_path = "/var/lib/alignak"
-else:
-    print "Alignak libexec not found: does not seem to be installed on this host!"
-    exit(2)
 
 # Import pack information
 from alignak_checks_EXAMPLE import __version__, __author__, __author_email__, __copyright__
@@ -49,27 +36,220 @@ from alignak_checks_EXAMPLE import __license__, __url__, __checks_type__
 from alignak_checks_EXAMPLE import __name__ as __pkg_name__
 package = import_module(__pkg_name__)
 
+
+def get_alignak_cfg():
+    """
+        Search for an etc/default/alignak file and the parse the file to find out main paths
+
+        Returns a dict
+    """
+    alignak_cfg = {}
+
+    # Search Alignak main configuration file
+    alignak_etc_default = "/"
+    if os.path.isfile("/usr/local/etc/default/alignak"):
+        alignak_etc_default = "/usr/local/etc/default/alignak"
+    elif os.path.isfile("/etc/default/alignak"):
+        alignak_etc_default = "/etc/default/alignak"
+    else:
+        print "Alignak '/etc/default/alignak' not found: Alignak does not seem to be installed on this host!"
+        return None
+
+    # Parse Alignak configuration file
+    with open(alignak_etc_default, "r") as etc_file:
+        for line in etc_file:
+            line = line.strip()
+
+            if line.startswith('ETC'):
+                alignak_cfg['ETC'] = line.split('=')[1]
+            elif line.startswith('VAR'):
+                alignak_cfg['VAR'] = line.split('=')[1]
+            elif line.startswith('BIN'):
+                alignak_cfg['BIN'] = line.split('=')[1]
+            elif line.startswith('RUN'):
+                alignak_cfg['RUN'] = line.split('=')[1]
+            elif line.startswith('LOG'):
+                alignak_cfg['LOG'] = line.split('=')[1]
+            elif line.startswith('LIB'):
+                alignak_cfg['LIB'] = line.split('=')[1]
+            elif line.startswith('ALIGNAKUSER'):
+                alignak_cfg['ALIGNAKUSER'] = line.split('=')[1]
+            elif line.startswith('ALIGNAKGROUP'):
+                alignak_cfg['ALIGNAKGROUP'] = line.split('=')[1]
+        etc_file.close()
+
+    # Check Alignak configuration directory
+    if 'ETC' in alignak_cfg:
+        if not os.path.exists(alignak_cfg['ETC']):
+            print "Alignak configuration directory (%s) not found: does not seem to be installed on this host!" % alignak_cfg['ETC']
+            return None
+
+    # Check Alignak plugins directory
+    if 'LIB' in alignak_cfg:
+        if not os.path.exists(alignak_cfg['LIB']):
+            print "Alignak plugins directory (%s) not found: does not seem to be installed on this host!" % alignak_cfg['LIB']
+            return None
+    else:
+        # Create default directory
+        if alignak_etc_default == "/usr/local/etc/default/alignak":
+            alignak_libexec_path = "/usr/local/var/lib/alignak/libexec"
+        elif alignak_etc_default == "/etc/default/alignak":
+            alignak_libexec_path = "/var/lib/alignak"
+
+        alignak_cfg['LIB'] = alignak_libexec_path
+
+    return alignak_cfg
+
+
+
+# Overloading setup.py install_data
+class my_install_data(_install_data):
+    def run(self):
+        print("Before install data ...")
+        _install_data.run(self)
+        print("After install data ...")
+        # After data files installation ...
+        # ... parse configuration files to update installation dir
+        if parsed_files:
+            # Prepare pattern for alignak.cfg
+            pattern = "|".join(alignak_cfg.keys())
+            to_change = re.compile("^(%s) *= *" % pattern)
+
+            print "Parsed files: "
+            for dir,file in parsed_files:
+                print " %s = %s" % (dir,file)
+
+                # Parse file
+                for line in fileinput.input(os.path.join(dir, file), inplace=True, backup=".orig"):
+                    print(Template(line).safe_substitute(alignak_cfg))
+
+                # Rename .parse file
+                os.rename(os.path.join(dir, file), os.path.join(dir, file[:-6]))
+
+# Get default Alignak paths ...
+alignak_cfg = get_alignak_cfg()
+if not alignak_cfg:
+    sys.exit("Alignak default paths not found!")
+
+print "Alignak config: "
+for path in alignak_cfg:
+    print " %s = %s" % (path, alignak_cfg[path])
+
 # Define installation paths
 # Get Alignak root installation directory
-alignak_etc_path = os.path.join(alignak_etc_path, 'arbiter_cfg', 'objects', 'packs', __checks_type__)
+alignak_etc_path = alignak_cfg['ETC']
+# Get Alignak configuration packs directory
+alignak_cfg_path = os.path.join(alignak_cfg['ETC'], 'arbiter_cfg', 'objects', 'packs', __checks_type__)
 # Get Alignak libexec directory
-# alignak_libexec_path = os.path.join(alignak_libexec_path, __pkg_name__)
+alignak_libexec_path = alignak_cfg['LIB']
+
 
 # Build list of all installable package files
-pack_files = []
-plugins_files = []
+data_files = []
+parsed_files = []
 for subdir, dirs, files in os.walk(__pkg_name__):
-    if subdir and 'plugins' in subdir:
-        for subdir, dirs, files in os.walk(os.path.join(__pkg_name__, 'plugins')):
-            for file in files:
-                if not file.startswith('__'):
-                    plugins_files.append(os.path.join(subdir, file))
     for file in files:
-        if subdir and 'plugins' in subdir:
-            continue
         if not file.startswith('__'):
-            if file not in plugins_files:
-                pack_files.append(os.path.join(subdir, file))
+            if subdir and 'plugins' in subdir:
+                data_files.append(
+                    (
+                        os.path.join(
+                            alignak_libexec_path,
+                            re.sub(
+                                r"^(%s\/|%s$)" % (
+                                    os.path.join(__pkg_name__, 'plugins'),
+                                    os.path.join(__pkg_name__, 'plugins')
+                                ),
+                                "",
+                                subdir
+                            )
+                        ),
+                        [os.path.join(subdir, file)]
+                    )
+                )
+                if file.endswith(".parse"):
+                    parsed_files.append(
+                        (
+                            os.path.join(
+                                alignak_libexec_path,
+                                re.sub(
+                                    r"^(%s\/|%s$)" % (
+                                        os.path.join(__pkg_name__, 'plugins'),
+                                        os.path.join(__pkg_name__, 'plugins')
+                                    ),
+                                    "",
+                                    subdir
+                                )
+                            ),
+                            file
+                        )
+                    )
+            elif subdir and 'etc' in subdir:
+                data_files.append(
+                    (
+                        os.path.join(
+                            alignak_etc_path,
+                            re.sub(
+                                r"^(%s\/|%s$)" % (
+                                    os.path.join(__pkg_name__, 'etc'),
+                                    os.path.join(__pkg_name__, 'etc')
+                                ),
+                                "",
+                                subdir
+                            )
+                        ),
+                        [os.path.join(subdir, file)]
+                    )
+                )
+                if file.endswith(".parse"):
+                    parsed_files.append(
+                        (
+                            os.path.join(
+                                alignak_etc_path,
+                                re.sub(
+                                    r"^(%s\/|%s$)" % (
+                                        os.path.join(__pkg_name__, 'etc'),
+                                        os.path.join(__pkg_name__, 'etc')
+                                    ),
+                                    "",
+                                    subdir
+                                )
+                            ),
+                            file
+                        )
+                    )
+            else:
+                data_files.append(
+                    (
+                        os.path.join(
+                            alignak_cfg_path,
+                            re.sub(r"^(%s\/|%s$)" %(__pkg_name__, __pkg_name__), "", subdir)
+                        ),
+                        [os.path.join(subdir, file)]
+                    )
+                )
+                if file.endswith(".parse"):
+                    parsed_files.append(
+                        (
+                            os.path.join(
+                                alignak_cfg_path,
+                                re.sub(r"^(%s\/|%s$)" %(__pkg_name__, __pkg_name__), "", subdir)
+                            ),
+                            file
+                        )
+                    )
+
+# data_files contains all the installable files
+if data_files:
+    print "Installed files: "
+    for dir,file in data_files:
+        print " %s = %s" % (dir,file)
+
+# parsed_files contains tuples for files to be parsed (directory, file)
+if parsed_files:
+    print "Parsed files: "
+    for k,v in parsed_files:
+        print " %s = %s" % (k,v)
 
 setup(
     name=__pkg_name__,
@@ -111,15 +291,16 @@ setup(
 
     # Where to install which file ...
     # All pack files are installed at the same place.
-    data_files = [
-        (alignak_libexec_path, plugins_files),
-        (alignak_etc_path, pack_files)
-    ],
+    data_files = data_files,
 
     # Dependencies (if some) ...
     install_requires=[''],
 
     # Entry points (if some) ...
     entry_points={
+    },
+
+    cmdclass={
+        'install_data': my_install_data,  # override install_data to set a post install hook
     }
 )
