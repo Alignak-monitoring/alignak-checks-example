@@ -48,13 +48,13 @@ You are allowed to declare variables in the packs files. Thos variables will be 
  All the files which name end with ``.parse`` will be parsed after installation to update their content to the Alignak installation paths.
 The searched patterns are:
 
-* $ETC: will be replaced with the Alignak configuration files path (*/etc/alignak*)
-* $VAR: will be replaced with the Alignak lib files path (*/var/lib/alignak*)
-* $RUN: will be replaced with the Alignak run files path (*/var/run/alignak*)
-* $BIN: will be replaced with the Alignak log files path (*/usr/bin*)
-* $LOG: will be replaced with the Alignak log files path (*/var/log/alignak*)
-* $ALIGNAKUSER: will be replaced with the Alignak user account name (*alignak*)
-* $ALIGNAKGROUP: will be replaced with the Alignak group name (*alignak*)
+* ALIGNAKETC: will be replaced with the Alignak configuration files path (*/etc/alignak*)
+* ALIGNAKVAR: will be replaced with the Alignak lib files path (*/var/lib/alignak*)
+* ALIGNAKRUN: will be replaced with the Alignak run files path (*/var/run/alignak*)
+* ALIGNAKBIN: will be replaced with the Alignak log files path (*/usr/bin*)
+* ALIGNAKLOG: will be replaced with the Alignak log files path (*/var/log/alignak*)
+* ALIGNAKUSER: will be replaced with the Alignak user account name (*alignak*)
+* ALIGNAKGROUP: will be replaced with the Alignak group name (*alignak*)
 
 **Note**: the replacement is based on Python Template strings. As of it, $ETC is the simplest form and may be replaced with ${ETC} if necessary.
 
