@@ -130,7 +130,7 @@ Then, to build and make your package available to the community, you must use th
 
 When your package is ready and functional:
 
-* run ``setup.py sdist upload`` to upload the package to PyPI repository <https://pypi.python.org/pypi>_
+* run ``setup.py sdist upload`` to upload the package to `PyPI repository`_
 
 **Note**: every time you upload a package to PyPI you will need to change the package version in the ``alignak_checks_EXAMPLE2/__init.py__`` file.
 
@@ -183,3 +183,4 @@ Alignak Pack EXAMPLE is available under the `GPL version 3 license`_.
 
 .. _GPL version 3 license: http://opensource.org/licenses/GPL-3.0
 .. _Alignak monitoring contrib: https://github.com/Alignak-monitoring-contrib
+.. _PyPI repository: <https://pypi.python.org/pypi>
