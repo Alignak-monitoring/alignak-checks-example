@@ -63,13 +63,14 @@ The searched patterns are:
 
 Repository example
 ~~~~~~~~~~~~~~~~~~~~~~~
-
+Repository directories and files example:
 ::
-   README.rst
-   LICENCE
-   AUTHORS
-   MANIFEST.in
-   setup.py
+  README.rst
+  LICENCE
+  AUTHORS
+  MANIFEST.in
+  setup.py
+  
    alignak_checks_EXAMPLE/
       etc/
          test.cfg
