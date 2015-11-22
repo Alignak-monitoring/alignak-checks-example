@@ -70,7 +70,7 @@ Repository directories and files example:
   AUTHORS
   MANIFEST.in
   setup.py
-  
+
    alignak_checks_EXAMPLE/
       etc/
          test.cfg
@@ -130,7 +130,7 @@ Then, to build and make your package available to the community, you must use th
 
 When your package is ready and functional:
 
-* run ``setup.py sdist upload`` to upload the package to `PyPI repository`_
+* run ``setup.py sdist upload`` to upload the package to `PyPI repository`_.
 
 **Note**: every time you upload a package to PyPI you will need to change the package version in the ``alignak_checks_EXAMPLE2/__init.py__`` file.
 
