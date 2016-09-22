@@ -38,13 +38,13 @@ The proposed structure to build a pack:
         * README.rst
         * LICENCE (optional)
         * AUTHORS (optional)
-        * MANIFEST.in
         * setup.py
+        * version.py
 
     * the ``EXAMPLE`` repository includes an ``alignak_checks_EXAMPLE`` directory containing the pack configuration files
-    * the files in ``alignak_checks_EXAMPLE`` directory will be copied to the Alignak configuration
+    * the files in ``alignak_checks_EXAMPLE`` directory will be copied to the Alignak configuration pack directory
     * the files in ``alignak_checks_EXAMPLE/plugins`` directory will be copied to the Alignak plugins directory
-    * the files in ``alignak_checks_EXAMPLE/etc`` directory will be copied to the Alignak etc directory
+    * the files in ``alignak_checks_EXAMPLE/ALIGNAKETC`` directory will be copied to the Alignak etc directory
 
 You are allowed to declare variables in the packs files. Those variables will be valued after the pack installation.
 All the files which name ends with ``.parse`` will be parsed after installation to update their content with the Alignak installation paths.
