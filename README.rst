@@ -72,7 +72,6 @@ Repository directories and files example:
   README.rst
   LICENCE
   AUTHORS
-  MANIFEST.in
   setup.py
 
     alignak_checks_EXAMPLE/
@@ -123,14 +122,13 @@ To build a new package EXAMPLE2:
         * search and replace ``EXAMPLE`` with ``EXAMPLE2``
         * complete the **Documentation** chapter
 
-    * update the ``alignak_checks_EXAMPLE2/__init.py__`` file with all the package information
+    * update the ``alignak_checks_EXAMPLE2/version.py`` file with all the package information
 
         * ``__checks_type__`` will be used to complete the keywords in PyPI and as the sub-directory to store the pack's files
         * the file docstring will be used as the package description in PyPI
 
-    * update the ``setup.py`` file
+    * update the ``setup.py`` file (**not mandatory**)
 
-        * search and replace ``EXAMPLE`` with ``EXAMPLE2``
         * ``setup.py`` should not be modified for most of the packs ... if necessary, do it with much care!
 
 And that's it!
