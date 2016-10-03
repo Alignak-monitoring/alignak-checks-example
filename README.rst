@@ -116,6 +116,10 @@ To build a new package EXAMPLE2:
 
         * edit the ``__pkg_name__`` and the ``checks_type`` variables
 
+    * update the ``MANIFEST.in`` file
+
+        * rename the ``alignak_checks_EXAMPLE`` directory to ``alignak_checks_EXAMPLE2``
+
     * update the ``README.rst`` file
 
         * remove this section **Packaging**
