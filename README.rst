@@ -26,9 +26,9 @@ Usually, the packs are only made of configuration files using the most common mo
 
 The pack files are to be made available in the monitoring objects configuration directory and provide configuration utilities for the end-user:
 
-    * hosts templates: the host "use" the pack features
-    * services templates: the service "use" the pack features
-    * ...
+   - hosts templates: the host "use" the pack features
+   - services templates: the service "use" the pack features
+   -  ...
 
 The proposed structure to build a pack:
 
