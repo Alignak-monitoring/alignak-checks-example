@@ -1,20 +1,20 @@
 Alignak checks package example
-==================================
+==============================
 
 This project is an example and a how-to for build a checks pack for Alignak monitoring framework.
 
 
 Packaging
-----------------------------------------
+---------
 
 Repositories
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~
 
 All Alignak packs are stored in their own repository in the `Alignak monitoring contrib`_ Github organization.
 
 
 Design and principles
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~
 
 Each pack aims to provide all the necessary elements in the Alignak configuration to monitor hosts and/or services.
 
@@ -66,13 +66,16 @@ The searched patterns are:
 
 
 Repository example
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 Repository directories and files example:
 ::
-  README.rst
-  LICENCE
-  AUTHORS
-  setup.py
+
+    README.rst
+    LICENCE
+    AUTHORS
+    requirements.txt
+    setup.py
+    version.py
 
     alignak_checks_EXAMPLE/
         arbiter/
@@ -90,21 +93,15 @@ Repository directories and files example:
         groups.cfg
         commands.cfg
 
-The files contained in the directory ``alignak_checks_EXAMPLE`` will be copied
-to */usr/local/var/etc/alignak/packs/EXAMPLE*.
-
 The content of the directory ``alignak_checks_EXAMPLE/ALIGNAKETC`` (including files and sub
 directories) will be copied to */usr/local/var/etc/alignak*.
 
 The content of the directory ``alignak_checks_EXAMPLE/plugins`` (including sub directories)
 will be copied to */usr/local/var/libexec/alignak*.
 
-The content of the directory ``alignak_checks_EXAMPLE/etc`` (including sub directories)
-will be copied to */usr/local/var/etc/alignak*.
-
 
 Building
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~
 
 To build a new package EXAMPLE2:
 
@@ -131,7 +128,7 @@ To build a new package EXAMPLE2:
         * ``__checks_type__`` will be used to complete the keywords in PyPI and as the sub-directory to store the pack's files
         * the file docstring will be used as the package description in PyPI
 
-    * update the ``setup.py`` file (**not mandatory**)
+    * update the ``setup.py`` file (**not recommended**)
 
         * ``setup.py`` should not be modified for most of the packs ... if necessary, do it with much care!
 
@@ -152,7 +149,7 @@ When your package is ready and functional:
 **Note**: every time you upload a package to PyPI you will need to change the package version in the ``alignak_checks_EXAMPLE2/__init.py__`` file.
 
 Installation
-----------------------------------------
+------------
 
 The pack configuration files are to be copied to the monitoring objects configuration directory. The most suitable location is the *arbiter/packs/* directory in the main alignak configuration directory.
 
@@ -163,7 +160,7 @@ The pack plugins (if any ...) are to be copied to the executable libraries direc
 **Note**: The Alignak librairies directory is usually */usr/local/var/libexec/alignak* but it may depend upon your system and/or your installation.
 
 From PyPI
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~
 To install the package from PyPI:
 ::
 
@@ -171,32 +168,29 @@ To install the package from PyPI:
 
 
 From source files
-~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 To install the package from the source files:
 ::
 
-    git clone https://github.com/Alignak-monitoring/alignak-checks-EXAMPLE
+    git clone https://github.com/Alignak-monitoring-contrib/alignak-checks-EXAMPLE
     cd alignak-checks-EXAMPLE
-    mkdir /usr/local/etc/alignak/arbiter/packs/EXAMPLE
-    # Copy configuration files
-    cp -R alignak_checks_EXAMPLE/*.cfg /usr/local/etc/alignak/arbiter/packs/EXAMPLE
-    # Copy plugin files
-    cp -R alignak_checks_EXAMPLE/plugins/*.py /usr/local/var/libexec/alignak
+    pip install -r requirements
+    python setup.py install
 
 
 Documentation
-----------------------------------------
+-------------
 
 To be completed
 
 
 Bugs, issues and contributing
-----------------------------------------
+-----------------------------
 
 Contributions to this project are welcome and encouraged ... issues in the project repository are the common way to raise an information.
 
 License
-----------------------------------------
+-------
 
 Alignak Pack EXAMPLE is available under the `GPL version 3 license`_.
 
