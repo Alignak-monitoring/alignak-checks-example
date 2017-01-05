@@ -1,7 +1,16 @@
 Alignak checks package example
 ==============================
 
-This project is an example and a how-to for build a checks pack for Alignak monitoring framework.
+*This project is an example and a how-to to help building a checks pack for Alignak monitoring framework.*
+
+
+.. image:: https://img.shields.io/badge/IRC-%23alignak-1e72ff.svg?style=flat
+    :target: http://webchat.freenode.net/?channels=%23alignak
+    :alt: Join the chat #alignak on freenode.net
+
+.. image:: https://img.shields.io/badge/License-AGPL%20v3-blue.svg
+    :target: http://www.gnu.org/licenses/agpl-3.0
+    :alt: License AGPL v3
 
 
 Packaging
@@ -10,7 +19,7 @@ Packaging
 Repositories
 ~~~~~~~~~~~~
 
-All Alignak packs are stored in their own repository in the `Alignak monitoring contrib`_ Github organization.
+All Alignak packs are stored in their own repository in the `Alignak monitoring contrib`_ Github organization. For creating a new checks pack, it needs to create a new repository in this organization. Contact us on the IRC channel or send an email to discuss the matter ;)
 
 
 Design and principles
@@ -18,7 +27,7 @@ Design and principles
 
 Each pack aims to provide all the necessary elements in the Alignak configuration to monitor hosts and/or services.
 
-Each pack include the checks commands definitions, services templates, hosts templates, ...
+Each pack includes the checks commands definitions, services templates, hosts templates, ...
 
 It is even possible to include the monitoring plugins that will be run by Alignak to check an host/service.
 
@@ -42,27 +51,8 @@ The proposed structure to build a pack:
         * version.py
 
     * the ``EXAMPLE`` repository includes an ``alignak_checks_EXAMPLE`` directory containing the pack configuration files
-    * the files in ``alignak_checks_EXAMPLE`` directory will be copied to the Alignak configuration pack directory
-    * the files in ``alignak_checks_EXAMPLE/plugins`` directory will be copied to the Alignak plugins directory
-    * the files in ``alignak_checks_EXAMPLE/ALIGNAKETC`` directory will be copied to the Alignak etc directory
-
-You are allowed to declare variables in the packs files. Those variables will be valued after the pack installation.
-All the files which name ends with ``.parse`` will be parsed after installation to update their content with the Alignak installation paths.
-The searched patterns are:
-
-    * ALIGNAKETC: will be replaced with the Alignak configuration files path (*/usr/local/etc/alignak*)
-    * ALIGNAKVAR: will be replaced with the Alignak lib files path (*/usr/local/var/lib/alignak*)
-    * ALIGNAKRUN: will be replaced with the Alignak run files path (*/usr/local/var/run/alignak*)
-    * ALIGNAKBIN: will be replaced with the Alignak log files path (*/usr/local/bin*)
-    * ALIGNAKLOG: will be replaced with the Alignak log files path (*/usr/local/var/log/alignak*)
-    * ALIGNAKLIB: will be replaced with the Alignak plugins path (*/usr/local/var/libexec/alignak*)
-    * ALIGNAKUSER: will be replaced with the Alignak user account name (*alignak*)
-    * ALIGNAKGROUP: will be replaced with the Alignak group name (*alignak*)
-
-**Note**: the values mentionned upper are the most common. Those values are created dynamically by the Aligna setup process and they may differ from the one introduced here.
-
-**Note**: the replacement is based on Python Template strings. As of it, $ETC is the simplest form and may be replaced with ${ETC} if necessary.
-
+    * the files/folders in ``alignak_checks_EXAMPLE/etc`` directory will be copied to the Alignak etc directory
+    * the files/folders in ``alignak_checks_EXAMPLE/libexec`` directory will be copied to the Alignak libexec directory
 
 
 Repository example
@@ -82,18 +72,19 @@ Repository directories and files example:
             packs/
                 resource.d/
                     EXAMPLE.cfg
+            EXAMPLE/
+                templates.cfg
+                services.cfg
+                groups.cfg
+                commands.cfg
         etc/
             test.cfg
         plugins/
             sub/
                 plugin.conf
             plugin.py
-        templates.cfg
-        services.cfg
-        groups.cfg
-        commands.cfg
 
-The content of the directory ``alignak_checks_EXAMPLE/ALIGNAKETC`` (including files and sub
+The content of the directory ``alignak_checks_EXAMPLE/etc`` (including files and sub
 directories) will be copied to */usr/local/var/etc/alignak*.
 
 The content of the directory ``alignak_checks_EXAMPLE/plugins`` (including sub directories)
@@ -111,7 +102,7 @@ To build a new package EXAMPLE2:
 
     * update the ``version.py`` file
 
-        * edit the ``__pkg_name__`` and the ``checks_type`` variables
+        * edit the ``__pkg_name__`` and the ``checks_type`` variables (at minimum)
 
     * update the ``MANIFEST.in`` file
 
@@ -121,7 +112,7 @@ To build a new package EXAMPLE2:
 
         * remove this section **Packaging**
         * search and replace ``EXAMPLE`` with ``EXAMPLE2``
-        * complete the **Documentation** chapter
+        * update and extend the **Documentation** chapter
 
     * update the ``alignak_checks_EXAMPLE2/version.py`` file with all the package information
 
@@ -136,17 +127,28 @@ And that's it!
 
 Then, to build and make your package available to the community, you must use the standard Python setuptools:
 
-    * run ``setup.py register`` to register the new package near PyPI
-    * run ``setup.py sdist`` to build the package
-    * run ``setup.py develop`` to make the package installed locally (development mode)
-    * run ``setup.py develop --uninstall`` to remove the development mode
-    * run ``setup.py install --dry-run`` to test the package installation (checks which and where the files are installed)
+    * run ``setup.py register -r pypi`` to register the new package near PyPI
+    * run ``setup.py sdist -r pypi`` to build the package
+    * run ``sudo pip install . -e`` to make the package installed locally (development mode)
+    * run ``sudo pip uninstall -v . -e`` to remove the development mode
+    * run ``sudo pip install . -v`` to make the package installed locally
+    * run ``sudo pip uninstall -v alignak_checks_EXAMPLE`` to uninstall the package
 
 When your package is ready and functional:
 
-    * run ``setup.py sdist upload`` to upload the package to `PyPI repository`_.
+    * run ``python setup.py sdist upload -r pypi`` to upload the package to `PyPI repository`_.
 
-**Note**: every time you upload a package to PyPI you will need to change the package version in the ``alignak_checks_EXAMPLE2/__init.py__`` file.
+**Note**: every time you upload a package to PyPI you will need to change the package version in the ``alignak_checks_EXAMPLE2/__init.py__`` file. You can make some tests with the `-r pypitest` ;)
+
+
+
+
+Under this line, keep the content for the new built package. Remove the former *Packaging* section of this document.
+-----
+
+
+
+
 
 Installation
 ------------
@@ -164,7 +166,7 @@ From PyPI
 To install the package from PyPI:
 ::
 
-    pip install alignak-checks-EXAMPLE
+   sudo pip install alignak-checks-EXAMPLE
 
 
 From source files
@@ -172,28 +174,58 @@ From source files
 To install the package from the source files:
 ::
 
-    git clone https://github.com/Alignak-monitoring-contrib/alignak-checks-EXAMPLE
-    cd alignak-checks-EXAMPLE
-    pip install -r requirements
-    python setup.py install
+   git clone https://github.com/Alignak-monitoring-contrib/alignak-checks-EXAMPLE
+   cd alignak-checks-EXAMPLE
+   sudo pip install .
 
+**Note:** *using `sudo python setup.py install` will not correctly manage the package configuration files! The recommended way is really to use `pip`;)*
 
 Documentation
 -------------
 
-To be completed
+**To be updated/completed!**
+
+Checks packs dependencies / installation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If needed...
+
+Configuration
+~~~~~~~~~~~~~
+Explain what is configurable in this checks pack.
+
+Edit the */usr/local/etc/alignak/arbiter/packs/EXAMPLE/resources.cfg* file and configure ... bla,bla...
+::
+
+   #-- Configurable macro
+   $PACK_MACRO$=qsdqsdqsd
+
+
+Prepare host
+~~~~~~~~~~~~
+Some operations are necessary on the monitored hosts if SNMP remote access is not yet activated.
+::
+
+   # Install local SNMP agent
+
+Alignak configuration
+~~~~~~~~~~~~~~~~~~~~~
+
+You simply have to tag the concerned hosts with the template `EXAMPLE`.
+::
+
+    define host{
+        use                     EXAMPLE
+        host_name               my_host
+        address                 127.0.0.1
+    }
+
 
 
 Bugs, issues and contributing
 -----------------------------
 
-Contributions to this project are welcome and encouraged ... issues in the project repository are the common way to raise an information.
+Contributions to this project are welcome and encouraged ... `issues in the project repository <https://github.com/alignak-monitoring-contrib/alignak-checks-EXAMPLE/issues>`_ are the common way to raise an information.
 
-License
--------
-
-Alignak Pack EXAMPLE is available under the `GPL version 3 license`_.
-
-.. _GPL version 3 license: http://opensource.org/licenses/GPL-3.0
 .. _Alignak monitoring contrib: https://github.com/Alignak-monitoring-contrib
 .. _PyPI repository: <https://pypi.python.org/pypi>
